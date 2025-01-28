@@ -103,11 +103,14 @@ find "$SCHEMAS_DIR/master-standalone" -name '*json' -exec bash -c ' mv -f $0 ${0
 
 # Organize schemas by group
 for schema in "$SCHEMAS_DIR"/*.json; do
+    # Skip if no files match the pattern
+    [[ -f "$schema" ]] || continue
+    
     crdFileName=$(basename "$schema")
     crdGroup=$(echo "$crdFileName" | cut -d"_" -f1)
     outName=$(echo "$crdFileName" | cut -d"_" -f2-)
-    mkdir -p "$crdGroup"
-    mv "$schema" "./$crdGroup/$outName"
+    mkdir -p "$SCHEMAS_DIR/$crdGroup"
+    mv "$schema" "$SCHEMAS_DIR/$crdGroup/$outName"
 done
 
 CYAN='\033[0;36m'
